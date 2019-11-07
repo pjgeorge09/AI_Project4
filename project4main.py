@@ -4,6 +4,8 @@ Created on Tue Nov  5 17:56:19 2019
 
 @author: Peter
 """
+import pandas as pd
+import numpy as np
 import porterstemmer
 p = porterstemmer.PorterStemmer()
 
@@ -71,8 +73,24 @@ with open('sentences.txt') as fp:
 splitWords = tokenize(sentences)
 noStopWords = removeStopWords(splitWords)
 tokenPorterStemmed = portStem(noStopWords)
-sentencePorterStemmed = backToSentences(tokenPorterStemmed)
+#print(tokenPorterStemmed)
+allWordsOrdered = []
+for x in tokenPorterStemmed:
+    for y in x:
+        if not(y in allWordsOrdered):
+            allWordsOrdered.append(str(y))
+            
+#allWordsOrdered.sort()
+print(tokenPorterStemmed)
+df = pd.DataFrame(0, index=range(1,len(tokenPorterStemmed)+1), columns = allWordsOrdered)
 
-
-#for aSentence in backToStrings:
-    
+for x in range(1, len(tokenPorterStemmed)+1):
+    tempSent = tokenPorterStemmed[x-1]
+    for y in tempSent:
+        df[y].iat[x-1] = df[y].iat[x-1]+1
+df.to_csv('someName.csv', index=False)
+print(df)
+for x in range (1,len(tokenPorterStemmed)+1):
+    sttemp = "Sentence " + str(x)
+    df.rename(index={x : sttemp}, inplace=True)
+print(df)

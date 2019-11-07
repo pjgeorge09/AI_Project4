@@ -1,0 +1,9 @@
+2b)
+Tokenize: Easier to analyze words as opposed to phrases, sentences, or structures of groups of words. Also easier to parse.
+
+Remove punc/special chars: They add little to know value, especially punctuation when analyzing by sentence, and further by word. A comma makes no sense with respect to individual words.
+
+Remove Numbers:
+
+Convert upper-case to lower-case: Start of sentences provides duplicate words. Removes noise.
+
