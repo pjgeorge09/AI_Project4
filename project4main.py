@@ -9,6 +9,7 @@ import numpy as np
 import porterstemmer
 p = porterstemmer.PorterStemmer()
 
+'''Method to turn a sentence string into a list of tokens'''
 def tokenize (anArray):
     splitWordsArray = []
     for _ in range(0,len(sentences)):
@@ -23,6 +24,7 @@ def tokenize (anArray):
         splitWordsArray.append(temp)
     return splitWordsArray
 
+'''Method to turn a list of tokens back to sentences, if needed (probably delete later)'''
 def backToSentences (anArray):
     toReturn = []
     for aSentence in anArray:
@@ -34,6 +36,7 @@ def backToSentences (anArray):
             toReturn.append(string)
     return toReturn
 
+'''Method to remove all stop words'''
 def removeStopWords (anArray):
     toReturn = []
     for aSentence in anArray:
@@ -45,7 +48,8 @@ def removeStopWords (anArray):
         if(tempSentence):
             toReturn.append(tempSentence)
     return toReturn
-    
+
+'''Method to use the Porter Stemmer algorithm provided to '''    
 def portStem (anArray):
     toReturn = []
     for aSentence in anArray:
@@ -56,13 +60,13 @@ def portStem (anArray):
         toReturn.append(sent)
     return toReturn
     
-            
-
+'''Random Instantiated Items Here'''      
+nums = ["0","1","2","3","4","5","6","7","8","9"]
+thresh = 2
 
 with open('stop_words.txt') as fp1:
     stopwords = fp1.read().splitlines()   #Maybe needs to be outside of open
 
-nums = ["0","1","2","3","4","5","6","7","8","9"]
 sentences = []
 with open('sentences.txt') as fp:
     line = fp.readline()
@@ -74,6 +78,7 @@ splitWords = tokenize(sentences)
 noStopWords = removeStopWords(splitWords)
 tokenPorterStemmed = portStem(noStopWords)
 allWordsOrdered = []
+
 for x in tokenPorterStemmed:
     for y in x:
         if not(y in allWordsOrdered):
@@ -87,7 +92,18 @@ for x in range(1, len(tokenPorterStemmed)+1):
     tempSent = tokenPorterStemmed[x-1]
     for y in tempSent:
         df[y].iat[x-1] = df[y].iat[x-1]+1
+        
 for x in range (1,len(tokenPorterStemmed)+1):
     sttemp = "Sentence " + str(x)
     df.rename(index={x : sttemp}, inplace=True)
+
+dictionary = {}
+for _ in df:
+    dictionary[df[_].name] = df[_].sum()
+dictionary = sorted(dictionary.items(), key = lambda kv: (kv[1], kv[0]))
+
+for _ in df:
+    if (df[_].sum() < thresh):
+        df = df.drop(columns = [_])
 df.to_csv('someName.csv', index=True)
+print(df.columns)      
