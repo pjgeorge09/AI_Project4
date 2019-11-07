@@ -73,24 +73,21 @@ with open('sentences.txt') as fp:
 splitWords = tokenize(sentences)
 noStopWords = removeStopWords(splitWords)
 tokenPorterStemmed = portStem(noStopWords)
-#print(tokenPorterStemmed)
 allWordsOrdered = []
 for x in tokenPorterStemmed:
     for y in x:
         if not(y in allWordsOrdered):
             allWordsOrdered.append(str(y))
-            
-#allWordsOrdered.sort()
-print(tokenPorterStemmed)
+           
+#initialize df
 df = pd.DataFrame(0, index=range(1,len(tokenPorterStemmed)+1), columns = allWordsOrdered)
 
+'''Creating the TDM from the init df object'''
 for x in range(1, len(tokenPorterStemmed)+1):
     tempSent = tokenPorterStemmed[x-1]
     for y in tempSent:
         df[y].iat[x-1] = df[y].iat[x-1]+1
-df.to_csv('someName.csv', index=False)
-print(df)
 for x in range (1,len(tokenPorterStemmed)+1):
     sttemp = "Sentence " + str(x)
     df.rename(index={x : sttemp}, inplace=True)
-print(df)
+df.to_csv('someName.csv', index=True)
